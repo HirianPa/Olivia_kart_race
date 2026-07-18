@@ -75,6 +75,24 @@ describe('TouchInput', () => {
     input.dispose();
   });
 
+  it.each([
+    ['northwest', 'up left', { throttle: 1, steer: 1, brake: 0 }],
+    ['northeast', 'up right', { throttle: 1, steer: -1, brake: 0 }],
+    ['southwest', 'down left', { throttle: 0, steer: 1, brake: 1 }],
+    ['southeast', 'down right', { throttle: 0, steer: -1, brake: 1 }],
+  ])('maps the %s diagonal to two driving actions', (_name, touchAction, expected) => {
+    const { root } = createControls();
+    const diagonal = new FakeButton(touchAction);
+    root.querySelectorAll = () => [diagonal];
+    const input = new TouchInput(root);
+
+    pointer(diagonal);
+    expect(input.read()).toMatchObject({ ...expected, drift: false, useItem: false });
+    diagonal.dispatch('pointerup', { pointerId: 1, currentTarget: diagonal });
+    expect(input.read()).toMatchObject({ throttle: 0, brake: 0, steer: 0 });
+    input.dispose();
+  });
+
   it('emits one item pulse per B press', () => {
     const { buttons, root } = createControls();
     const input = new TouchInput(root);
