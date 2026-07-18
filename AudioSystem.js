@@ -47,19 +47,19 @@ export class AudioSystem {
   }
 
   unlock() {
-    if (this.disposed || this.failed) return false;
+    if (this.disposed) return false;
     if (this.unlocked) return true;
     try {
       this.context ??= this.contextFactory();
-      this.master ??= this.#gain(0.22);
+      this.master ??= this.#gain(0.48);
       this.master.connect(this.context.destination);
       this.unlocked = true;
       Promise.resolve(this.context.resume?.()).catch(() => {});
       return true;
     } catch {
-      this.failed = true;
       this.#disconnectAll();
       this.context = null;
+      this.master = null;
       return false;
     }
   }
@@ -72,7 +72,7 @@ export class AudioSystem {
     const base = 72 + normalizedSpeed * 126 + (boost ? 48 : 0);
     setParam(this.engine.low.frequency, base, time, true);
     setParam(this.engine.high.frequency, base * (boost ? 2.02 : 1.48), time, true);
-    setParam(this.engine.gain.gain, 0.025 + normalizedSpeed * 0.07 + (boost ? 0.035 : 0), time, true);
+    setParam(this.engine.gain.gain, 0.045 + normalizedSpeed * 0.11 + (boost ? 0.045 : 0), time, true);
     return true;
   }
 
@@ -84,7 +84,7 @@ export class AudioSystem {
     if (now - previous < COOLDOWNS[type]) return false;
     this.lastEventAt.set(type, now);
     const [frequency, duration, wave] = EVENT_TONES[type];
-    this.#oneShot(frequency, duration, wave, type === 'hit' ? 0.09 : 0.07);
+    this.#oneShot(frequency, duration, wave, type === 'hit' ? 0.14 : 0.12);
     return true;
   }
 
@@ -114,7 +114,7 @@ export class AudioSystem {
   }
 
   #createEngine() {
-    const gain = this.#gain(0.025);
+    const gain = this.#gain(0.045);
     gain.connect(this.master);
     const low = this.#oscillator(72, 'sawtooth');
     const high = this.#oscillator(112, 'triangle');
