@@ -60,6 +60,21 @@ describe('TouchInput', () => {
     input.dispose();
   });
 
+  it('keeps acceleration held when another finger steers away from the button', () => {
+    const { buttons, root } = createControls();
+    const input = new TouchInput(root);
+
+    pointer(buttons.up, 1);
+    pointer(buttons.left, 2);
+    buttons.up.dispatch('pointerleave', { pointerId: 1, currentTarget: buttons.up });
+
+    expect(input.read()).toMatchObject({ throttle: 1, brake: 0, steer: 1, drift: false });
+    buttons.up.dispatch('pointerup', { pointerId: 1, currentTarget: buttons.up });
+    buttons.left.dispatch('pointerup', { pointerId: 2, currentTarget: buttons.left });
+    expect(input.read()).toMatchObject({ throttle: 0, steer: 0 });
+    input.dispose();
+  });
+
   it('emits one item pulse per B press', () => {
     const { buttons, root } = createControls();
     const input = new TouchInput(root);
