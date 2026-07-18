@@ -81,9 +81,17 @@ try {
   let lastCountdown = null;
   let wasBoosting = false;
   let wasAirborne = false;
-  const unlockAudio = () => { audioEnabled = audio.unlock(); };
-  window.addEventListener('keydown', unlockAudio, { once: true });
-  window.addEventListener('pointerdown', unlockAudio, { once: true, passive: true });
+  const unlockAudio = () => {
+    if (audioEnabled) return;
+    audioEnabled = audio.unlock();
+    if (!audioEnabled) return;
+    window.removeEventListener('keydown', unlockAudio);
+    window.removeEventListener('pointerdown', unlockAudio);
+    window.removeEventListener('touchstart', unlockAudio);
+  };
+  window.addEventListener('keydown', unlockAudio);
+  window.addEventListener('pointerdown', unlockAudio, { passive: true });
+  window.addEventListener('touchstart', unlockAudio, { passive: true });
 
   const activateItem = (event) => {
     if (!event) return;
@@ -199,6 +207,7 @@ try {
     touchInput?.dispose();
     window.removeEventListener('keydown', unlockAudio);
     window.removeEventListener('pointerdown', unlockAudio);
+    window.removeEventListener('touchstart', unlockAudio);
     audio.dispose();
     timer.dispose();
     gameScene.dispose();
