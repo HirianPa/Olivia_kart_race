@@ -46,4 +46,13 @@ describe('HUD coin feedback', () => {
     expect(elements['lap-banner'].dataset.wave).toBe('true');
     expect(elements['lap-wave'].dataset.travel).toBe('true');
   });
+
+  it('labels the final classification panel as RACE RESULTS', () => {
+    const { hud, elements } = makeHud();
+
+    hud.update({ ...snapshot, state: 'finished', results: [{ position: 1, name: 'Player', time: 12.34 }] }, kart);
+
+    expect(elements.results.innerHTML).toContain('<h1>RACE RESULTS</h1>');
+    expect(elements.results.innerHTML).not.toContain('BRISACORAL');
+  });
 });
