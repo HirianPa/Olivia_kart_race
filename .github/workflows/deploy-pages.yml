@@ -30,6 +30,7 @@ jobs:
             [config.js]=src
             [KartEffects.js]=src/effects
             [KeyboardInput.js]=src/input
+            [TouchInput.js]=src/input
             [CoinFeedback.js]=src/items
             [CoinSystem.js]=src/items
             [ItemSystem.js]=src/items
