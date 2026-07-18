@@ -89,7 +89,7 @@ export class HUD {
 
   #showResults(results, raceTime) {
     if (this.results.dataset.visible === 'true') return;
-    this.results.innerHTML = `<div class="results-card"><small>CLASIFICACIÓN</small><h1>BRISACORAL</h1>${results.map((entry) => `<div class="result-row"><b>${entry.position}</b><span>${entry.name}</span><time>${entry.time === null ? formatTime(raceTime + entry.position * 1.7) : formatTime(entry.time)}</time></div>`).join('')}<p>Recarga para volver a correr</p></div>`;
+    this.results.innerHTML = `<div class="results-card"><small>CLASIFICACIÓN</small><h1>RACE RESULTS</h1>${results.map((entry) => `<div class="result-row"><b>${entry.position}</b><span>${entry.name}</span><time>${entry.time === null ? formatTime(raceTime + entry.position * 1.7) : formatTime(entry.time)}</time></div>`).join('')}<p>Recarga para volver a correr</p></div>`;
     this.results.dataset.visible = 'true';
   }
 
