@@ -23,6 +23,19 @@
         <div class="results" data-hud="results" data-visible="false"></div>
       </section>
       <div class="controls-hint"><kbd>WASD</kbd><span>+</span><kbd>SHIFT DRIFT</kbd><span>+</span><kbd>ESPACIO OBJETO</kbd></div>
+      <section id="touch-controls" class="touch-controls" aria-label="Controles táctiles">
+        <div class="touch-dpad" aria-label="Dirección">
+          <button type="button" data-touch-action="up" aria-label="Acelerar">▲</button>
+          <button type="button" data-touch-action="left" aria-label="Girar a la izquierda">◀</button>
+          <span class="touch-dpad-core" aria-hidden="true">✦</span>
+          <button type="button" data-touch-action="right" aria-label="Girar a la derecha">▶</button>
+          <button type="button" data-touch-action="down" aria-label="Frenar o ir atrás">▼</button>
+        </div>
+        <div class="touch-action-buttons" aria-label="Acciones">
+          <button type="button" class="touch-action touch-action-a" data-touch-action="drift" aria-label="Derrapar">A</button>
+          <button type="button" class="touch-action touch-action-b" data-touch-action="item" aria-label="Usar objeto">B</button>
+        </div>
+      </section>
       <div id="compatibility" role="alert" data-visible="false"></div>
     </main>
     <script type="module" src="/src/main.js"></script>
