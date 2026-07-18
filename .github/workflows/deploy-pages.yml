@@ -20,6 +20,51 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Restore source folders from legacy upload
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p src/audio src/effects src/input src/items src/kart src/math src/race src/scene src/track src/ui tests
+          declare -A source_dirs=(
+            [AudioSystem.js]=src/audio
+            [config.js]=src
+            [KartEffects.js]=src/effects
+            [KeyboardInput.js]=src/input
+            [CoinFeedback.js]=src/items
+            [CoinSystem.js]=src/items
+            [ItemSystem.js]=src/items
+            [ProjectileSystem.js]=src/items
+            [AntiStuckSystem.js]=src/kart
+            [DriftSystem.js]=src/kart
+            [JumpSystem.js]=src/kart
+            [KartAnimator.js]=src/kart
+            [PlayerKart.js]=src/kart
+            [SlipstreamSystem.js]=src/kart
+            [createKartModel.js]=src/kart
+            [arcadeMath.js]=src/math
+            [KartCollisions.js]=src/race
+            [RaceDirector.js]=src/race
+            [RaceManager.js]=src/race
+            [RivalItemDecision.js]=src/race
+            [RivalKart.js]=src/race
+            [FollowCamera.js]=src/scene
+            [GameScene.js]=src/scene
+            [QualityController.js]=src/scene
+            [ToyBoxEnvironment.js]=src/scene
+            [Track.js]=src/track
+            [TrackFeatures.js]=src/track
+            [HUD.js]=src/ui
+            [main.js]=src
+            [styles.css]=src
+          )
+          for file in "${!source_dirs[@]}"; do
+            if [ -f "$file" ]; then
+              mv "$file" "${source_dirs[$file]}/$file"
+            fi
+          done
+          for file in *test.js; do
+            if [ -f "$file" ]; then mv "$file" tests/; fi
+          done
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
