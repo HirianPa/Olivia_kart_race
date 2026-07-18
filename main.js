@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import './styles.css';
 import { KART_PHYSICS } from './config.js';
 import { KeyboardInput } from './input/KeyboardInput.js';
+import { isTouchDevice, TouchInput } from './input/TouchInput.js';
 import { ItemSystem } from './items/ItemSystem.js';
 import { CoinSystem } from './items/CoinSystem.js';
 import { routeCoinEvents } from './items/CoinFeedback.js';
@@ -24,6 +25,7 @@ const compatibility = document.querySelector('#compatibility');
 
 let gameScene;
 let input;
+let touchInput;
 let animationFrame;
 
 function showCompatibilityError() {
@@ -59,6 +61,11 @@ try {
   const hud = new HUD(document);
   const audio = new AudioSystem();
   input = new KeyboardInput(window);
+  const touchControls = document.querySelector('#touch-controls');
+  if (touchControls && isTouchDevice(window)) {
+    document.documentElement.classList.add('touch-capable');
+    touchInput = new TouchInput(touchControls);
+  }
   gameScene.scene.add(track.group, items.group, coins.group, projectiles.group, effects.group, player.group, ...rivals.map((rival) => rival.group));
 
   const followCamera = new FollowCamera(gameScene.camera, player.group);
@@ -76,6 +83,7 @@ try {
   let wasAirborne = false;
   const unlockAudio = () => { audioEnabled = audio.unlock(); };
   window.addEventListener('keydown', unlockAudio, { once: true });
+  window.addEventListener('pointerdown', unlockAudio, { once: true, passive: true });
 
   const activateItem = (event) => {
     if (!event) return;
@@ -98,7 +106,15 @@ try {
     if (audioEnabled && playerSnapshot.state === 'countdown' && playerSnapshot.countdown !== lastCountdown) audio.play('countdown');
     if (audioEnabled && playerSnapshot.state === 'racing' && lastCountdown !== 'GO') audio.play('turbo');
     lastCountdown = playerSnapshot.state === 'racing' ? 'GO' : playerSnapshot.countdown;
-    const inputState = input.read();
+    const keyboardState = input.read();
+    const touchState = touchInput?.read() ?? { throttle: 0, brake: 0, steer: 0, drift: false, useItem: false };
+    const inputState = {
+      throttle: Math.max(keyboardState.throttle, touchState.throttle),
+      brake: Math.max(keyboardState.brake, touchState.brake),
+      steer: Math.max(-1, Math.min(1, keyboardState.steer + touchState.steer)),
+      drift: keyboardState.drift || touchState.drift,
+      useItem: keyboardState.useItem || touchState.useItem,
+    };
     const controls = race.raceActive ? inputState : { throttle: 0, brake: 0, steer: 0, drift: false, useItem: false };
     track.features.update(dt);
     items.update(dt);
@@ -180,7 +196,9 @@ try {
     cancelAnimationFrame(animationFrame);
     window.removeEventListener('resize', onResize);
     input.dispose();
+    touchInput?.dispose();
     window.removeEventListener('keydown', unlockAudio);
+    window.removeEventListener('pointerdown', unlockAudio);
     audio.dispose();
     timer.dispose();
     gameScene.dispose();
