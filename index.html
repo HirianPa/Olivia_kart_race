@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#84d8d1" />
+    <title>Brisacoral Kart</title>
+  </head>
+  <body>
+    <main id="app" aria-label="Brisacoral Kart">
+      <section class="hud" aria-label="Estado de carrera">
+        <div class="race-meta"><b data-hud="lap">VUELTA 1/3</b><time data-hud="time">0:00.00</time></div>
+        <div class="lap-crest" data-hud="lap-banner" data-wave="false"><span>VUELTA 1/3</span></div>
+        <div class="lap-wave" data-hud="lap-wave" data-travel="false" aria-hidden="true"><i></i><i></i><i></i></div>
+        <strong class="race-position" data-hud="position">1/5</strong>
+        <div class="resource-cluster">
+          <div class="item-slot" data-hud="item" data-item="none"><span>?</span><small>VACÍO</small></div>
+          <div class="coin-counter" data-hud="coins">☀ 0/10</div>
+          <div class="coin-event" data-hud="coin-event" data-visible="false" aria-live="polite"></div>
+        </div>
+        <div class="speed-cluster"><div class="turbo" data-hud="turbo"><i></i><span>MINI-TURBO</span></div><b data-hud="speed">0</b><small>KM/H</small></div>
+        <div class="countdown" data-hud="countdown" data-visible="true" aria-live="assertive">3</div>
+        <div class="results" data-hud="results" data-visible="false"></div>
+      </section>
+      <div class="controls-hint"><kbd>WASD</kbd><span>+</span><kbd>SHIFT DRIFT</kbd><span>+</span><kbd>ESPACIO OBJETO</kbd></div>
+      <div id="compatibility" role="alert" data-visible="false"></div>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
