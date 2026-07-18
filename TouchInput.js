@@ -26,14 +26,12 @@ export class TouchInput {
       const onPointerDown = (event) => this.#press(button, event);
       const onPointerUp = (event) => this.#release(event.pointerId);
       const onPointerCancel = (event) => this.#release(event.pointerId);
-      const onPointerLeave = (event) => this.#release(event.pointerId);
       const onLostCapture = (event) => this.#release(event.pointerId);
       button.addEventListener('pointerdown', onPointerDown, { passive: false });
       button.addEventListener('pointerup', onPointerUp);
       button.addEventListener('pointercancel', onPointerCancel);
-      button.addEventListener('pointerleave', onPointerLeave);
       button.addEventListener('lostpointercapture', onLostCapture);
-      this.handlers.push([button, 'pointerdown', onPointerDown], [button, 'pointerup', onPointerUp], [button, 'pointercancel', onPointerCancel], [button, 'pointerleave', onPointerLeave], [button, 'lostpointercapture', onLostCapture]);
+      this.handlers.push([button, 'pointerdown', onPointerDown], [button, 'pointerup', onPointerUp], [button, 'pointercancel', onPointerCancel], [button, 'lostpointercapture', onLostCapture]);
     }
 
     this.onVisibility = () => this.clear();
