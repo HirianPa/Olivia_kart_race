@@ -325,10 +325,15 @@ html.touch-capable .touch-controls { display: block; }
 }
 
 .touch-dpad button { width: 100%; height: 100%; border-radius: 19px; }
-.touch-dpad button:nth-of-type(1) { grid-area: 1 / 2; border-radius: 22px 22px 13px 13px; }
-.touch-dpad button:nth-of-type(2) { grid-area: 2 / 1; border-radius: 22px 13px 13px 22px; }
-.touch-dpad button:nth-of-type(3) { grid-area: 2 / 3; border-radius: 13px 22px 22px 13px; }
-.touch-dpad button:nth-of-type(4) { grid-area: 3 / 2; border-radius: 13px 13px 22px 22px; }
+.touch-diagonal { font-size: clamp(16px, 3.4vw, 23px); border-radius: 16px; background: linear-gradient(145deg, rgb(181 244 224 / 42%), rgb(8 67 76 / 61%)); }
+.touch-diagonal-nw { grid-area: 1 / 1; border-radius: 22px 14px 14px 14px; }
+.touch-diagonal-ne { grid-area: 1 / 3; border-radius: 14px 22px 14px 14px; }
+.touch-diagonal-sw { grid-area: 3 / 1; border-radius: 14px 14px 14px 22px; }
+.touch-diagonal-se { grid-area: 3 / 3; border-radius: 14px 14px 22px 14px; }
+.touch-dpad button[data-touch-action="up"] { grid-area: 1 / 2; border-radius: 22px 22px 13px 13px; }
+.touch-dpad button[data-touch-action="left"] { grid-area: 2 / 1; border-radius: 22px 13px 13px 22px; }
+.touch-dpad button[data-touch-action="right"] { grid-area: 2 / 3; border-radius: 13px 22px 22px 13px; }
+.touch-dpad button[data-touch-action="down"] { grid-area: 3 / 2; border-radius: 13px 13px 22px 22px; }
 .touch-dpad-core { grid-area: 2 / 2; z-index: 2; display: grid; width: 42px; height: 42px; place-items: center; border: 1px solid rgb(255 248 223 / 35%); border-radius: 50%; color: #ffd45c; background: rgb(8 46 57 / 40%); box-shadow: inset 0 1px 3px rgb(255 255 255 / 24%); font-size: 17px; }
 
 .touch-action-buttons {
