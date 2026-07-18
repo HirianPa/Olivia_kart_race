@@ -40,19 +40,23 @@ export class TouchInput {
   }
 
   #press(button, event) {
-    const action = button.dataset?.touchAction;
-    if (!TOUCH_ACTIONS.has(action)) return;
+    const actions = String(button.dataset?.touchAction ?? '')
+      .split(/\s+/)
+      .filter(Boolean);
+    if (!actions.length || actions.some((action) => !TOUCH_ACTIONS.has(action))) return;
     event.preventDefault?.();
     const pointerId = event.pointerId ?? 0;
     if (this.activePointers.has(pointerId)) this.#release(pointerId);
-    this.activePointers.set(pointerId, { action, button });
+    this.activePointers.set(pointerId, { actions, button });
     button.dataset.pressed = 'true';
     button.setPointerCapture?.(pointerId);
-    if (action === 'item') {
+    if (actions.includes('item')) {
       this.useItemPending = true;
-      return;
     }
-    this.actionCounts.set(action, (this.actionCounts.get(action) ?? 0) + 1);
+    for (const action of actions) {
+      if (action === 'item') continue;
+      this.actionCounts.set(action, (this.actionCounts.get(action) ?? 0) + 1);
+    }
   }
 
   #release(pointerId) {
@@ -60,10 +64,12 @@ export class TouchInput {
     if (!pointer) return;
     this.activePointers.delete(pointerId);
     pointer.button.dataset.pressed = 'false';
-    if (pointer.action === 'item') return;
-    const nextCount = (this.actionCounts.get(pointer.action) ?? 1) - 1;
-    if (nextCount > 0) this.actionCounts.set(pointer.action, nextCount);
-    else this.actionCounts.delete(pointer.action);
+    for (const action of pointer.actions) {
+      if (action === 'item') continue;
+      const nextCount = (this.actionCounts.get(action) ?? 1) - 1;
+      if (nextCount > 0) this.actionCounts.set(action, nextCount);
+      else this.actionCounts.delete(action);
+    }
   }
 
   setAction(action, active) {
